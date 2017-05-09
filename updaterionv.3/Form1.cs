@@ -97,7 +97,9 @@ namespace updaterionv._3
                     if (!MyList.Contains(update.Title))
                     {
                         MyList.Add(update.Title);
+                        MyList.Add(update.MaxDownloadSize.ToString());
                     }
+                    Console.WriteLine(update.ToString());
 
                 }
 
