@@ -32,7 +32,6 @@ namespace updaterionv._3
             if (scanCounter == 0)
             {
                 scanCounter++;
-                errorBox1.Text = "";
                 MyList = new List<string>();
                 var bw = new BackgroundWorker();
                 bw.DoWork += (o, args) => scanWorker();
@@ -64,12 +63,9 @@ namespace updaterionv._3
             
             UpdateSession uSession = new UpdateSession();
             IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
-
+            ///Checks if Driver box is checked and updates list for updates in "Drivers"
             if (driverCheckBox.Checked)
             {
-                /*
-                 * 
-                 */
                 ISearchResult dResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
                 foreach (IUpdate update in dResult.Updates)
                 {
@@ -81,31 +77,28 @@ namespace updaterionv._3
                     {
                         MyList.Add(update.Title);
                     }
-
-
                 }
             }
+            ///Checks if software box is checked and updates list for updates in "Software"
             if (softwareCheckBox.Checked)
             {
                 ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+                Console.WriteLine(uResult.Updates.Count);
                 foreach (IUpdate update in uResult.Updates)
                 {
-                    if (update == null)
+                    if (update.ToString() == "")
                     {
                         MyList.Add("no updates found");
                     }
                     if (!MyList.Contains(update.Title))
                     {
                         MyList.Add(update.Title);
-                        MyList.Add(update.MaxDownloadSize.ToString());
+                        //checks MaxDownloadSize of update
+                        //MyList.Add(update.MaxDownloadSize.ToString());
+                        
                     }
-                    Console.WriteLine(update.ToString());
-
                 }
-
             }
-
-            
         }
 
         void diWorker()
@@ -153,6 +146,7 @@ namespace updaterionv._3
         {
             checkedListBox1.Items.Clear();
             scanCounter = 0;
+            errorBox1.Text = "";
         }
     }
 }
