@@ -58,6 +58,8 @@ namespace updaterionv._3
             // Invoke method:
             // listBox1.Invoke( new Action( () => listBox1.Items.AddRange( MyList.ToArray() ) ) );
         }
+        static ISearchResult dResult;
+        ISearchResult uResult;
         void scanWorker()
         {
             
@@ -66,7 +68,7 @@ namespace updaterionv._3
             ///Checks if Driver box is checked and updates list for updates in "Drivers"
             if (driverCheckBox.Checked)
             {
-                ISearchResult dResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
+                dResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
                 foreach (IUpdate update in dResult.Updates)
                 {
                     if (update == null)
@@ -82,7 +84,7 @@ namespace updaterionv._3
             ///Checks if software box is checked and updates list for updates in "Software"
             if (softwareCheckBox.Checked)
             {
-                ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+                uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
                 Console.WriteLine(uResult.Updates.Count);
                 foreach (IUpdate update in uResult.Updates)
                 {
@@ -105,17 +107,34 @@ namespace updaterionv._3
         {
             UpdateSession uSession = new UpdateSession();
             IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
-            ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
-
-            UpdateDownloader downloader = uSession.CreateUpdateDownloader();
-            downloader.Updates = uResult.Updates;
-            downloader.Download();
             UpdateCollection updatesToInstall = new UpdateCollection();
-            foreach (IUpdate update in uResult.Updates)
+
+            //checks if software box is checked and installed those updates
+            if (softwareCheckBox.Checked)
             {
-                if (update.IsDownloaded)
-                    updatesToInstall.Add(update);
+                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+                downloader.Updates = uResult.Updates;
+                downloader.Download();
+                foreach (IUpdate update in uResult.Updates)
+                {
+                    if (update.IsDownloaded)
+                        updatesToInstall.Add(update);
+                }
             }
+            if (driverCheckBox.Checked)
+            {
+                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+                downloader.Updates = dResult.Updates;
+                downloader.Download();
+                foreach (IUpdate update in dResult.Updates)
+                {
+                    if (update.IsDownloaded)
+                        updatesToInstall.Add(update);
+                }
+
+            }
+            
+            
             IUpdateInstaller installer = uSession.CreateUpdateInstaller();
             installer.Updates = updatesToInstall;
             IInstallationResult installationRes = installer.Install();
@@ -147,6 +166,23 @@ namespace updaterionv._3
             checkedListBox1.Items.Clear();
             scanCounter = 0;
             errorBox1.Text = "";
+        }
+
+        private void dibutton_Click(object sender, EventArgs e)
+        {
+            if (scanCounter == 0)
+            {
+                errorBox1.Text = "Please scan before Downloading\Installing"
+            }
+            else
+            {
+                MyList = new List<string>();
+                var bw = new BackgroundWorker();
+                bw.DoWork += (o, args) => diWorker();
+                bw.RunWorkerCompleted += (o, args) => MethodToUpdateControl();
+                bw.RunWorkerAsync();
+            }
+            
         }
     }
 }

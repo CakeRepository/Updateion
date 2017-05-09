@@ -35,14 +35,15 @@
             this.clearButton = new System.Windows.Forms.Button();
             this.errorBox1 = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.dibutton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 142);
+            this.checkedListBox1.Location = new System.Drawing.Point(13, 138);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(267, 199);
+            this.checkedListBox1.Size = new System.Drawing.Size(267, 214);
             this.checkedListBox1.TabIndex = 0;
             // 
             // driverCheckBox
@@ -69,9 +70,9 @@
             // 
             // scanButton
             // 
-            this.scanButton.Location = new System.Drawing.Point(12, 60);
+            this.scanButton.Location = new System.Drawing.Point(13, 60);
             this.scanButton.Name = "scanButton";
-            this.scanButton.Size = new System.Drawing.Size(266, 53);
+            this.scanButton.Size = new System.Drawing.Size(266, 26);
             this.scanButton.TabIndex = 3;
             this.scanButton.Text = "Scan";
             this.scanButton.UseVisualStyleBackColor = true;
@@ -107,11 +108,22 @@
             this.checkBox1.Text = "checkBox1";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // dibutton
+            // 
+            this.dibutton.Location = new System.Drawing.Point(13, 92);
+            this.dibutton.Name = "dibutton";
+            this.dibutton.Size = new System.Drawing.Size(267, 26);
+            this.dibutton.TabIndex = 7;
+            this.dibutton.Text = "Download and Install";
+            this.dibutton.UseVisualStyleBackColor = true;
+            this.dibutton.Click += new System.EventHandler(this.dibutton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(311, 366);
+            this.Controls.Add(this.dibutton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.errorBox1);
             this.Controls.Add(this.clearButton);
@@ -136,6 +148,7 @@
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.TextBox errorBox1;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button dibutton;
     }
 }
 
