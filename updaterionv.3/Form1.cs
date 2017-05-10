@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace updaterionv._3
 {
     public partial class Form1 : Form
     {
+        string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
         int scanCounter = 0;
         public List<string> MyList { get; set; }
 
@@ -24,9 +26,10 @@ namespace updaterionv._3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            passwordTextBox.Text = "";
+            usernameTextBox.Text = username;
+            passwordTextBox.PasswordChar = '*';
         }
-
         private void scanButton_Click(object sender, EventArgs e)
         {
             if (scanCounter == 0)
@@ -59,7 +62,7 @@ namespace updaterionv._3
             // listBox1.Invoke( new Action( () => listBox1.Items.AddRange( MyList.ToArray() ) ) );
         }
         static ISearchResult dResult;
-        ISearchResult uResult;
+        static ISearchResult uResult;
         void scanWorker()
         {
             
@@ -146,6 +149,7 @@ namespace updaterionv._3
                 }
                 else
                 {
+                    //Failed update
                     Console.WriteLine("Failed : " + updatesToInstall[i].Title);
                 }
             }
@@ -172,7 +176,7 @@ namespace updaterionv._3
         {
             if (scanCounter == 0)
             {
-                errorBox1.Text = "Please scan before Downloading\Installing"
+                errorBox1.Text = "Please scan before Downloading\\Installing";
             }
             else
             {
@@ -183,6 +187,48 @@ namespace updaterionv._3
                 bw.RunWorkerAsync();
             }
             
+        }
+
+        private void automateButton_Click(object sender, EventArgs e)
+        {
+            string password = passwordTextBox.Text;
+            bool dcheckbox = false;
+            bool scheckbox = false;
+            bool valid = false;
+            errorBox1.Text = "";
+            if (driverCheckBox.Checked)
+            {
+                dcheckbox = true;
+            }
+            if (softwareCheckBox.Checked)
+            {
+                scheckbox = true;
+            }
+            using (PrincipalContext context = new PrincipalContext(ContextType.Machine))
+            {
+                valid = context.ValidateCredentials(username, password);
+            }
+            if (valid == false)
+            {
+                errorBox1.Text = "Incorrect Password";
+            }
+            else
+            {
+                disableBox();
+            }
+        }
+        /// <summary>
+        /// Disables all boxes on Form1 if items are added they will need to be added here to disable
+        /// </summary>
+        public void disableBox()
+        {
+            this.automateButton.Enabled = false;
+            this.scanButton.Enabled = false;
+            this.dibutton.Enabled = false;
+            this.driverCheckBox.Enabled = false;
+            this.softwareCheckBox.Enabled = false;
+            this.clearButton.Enabled = false;
+            this.passwordTextBox.Enabled = false;
         }
     }
 }

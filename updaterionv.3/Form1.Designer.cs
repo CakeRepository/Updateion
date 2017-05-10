@@ -20,6 +20,7 @@
             base.Dispose(disposing);
         }
 
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -34,8 +35,12 @@
             this.scanButton = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
             this.errorBox1 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dibutton = new System.Windows.Forms.Button();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.usernamelbl = new System.Windows.Forms.Label();
+            this.passwordlbl = new System.Windows.Forms.Label();
+            this.automateButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkedListBox1
@@ -43,7 +48,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(13, 138);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(267, 214);
+            this.checkedListBox1.Size = new System.Drawing.Size(709, 364);
             this.checkedListBox1.TabIndex = 0;
             // 
             // driverCheckBox
@@ -98,16 +103,6 @@
             this.errorBox1.Size = new System.Drawing.Size(231, 13);
             this.errorBox1.TabIndex = 5;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(189, 37);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(80, 17);
-            this.checkBox1.TabIndex = 6;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // dibutton
             // 
             this.dibutton.Location = new System.Drawing.Point(13, 92);
@@ -118,13 +113,60 @@
             this.dibutton.UseVisualStyleBackColor = true;
             this.dibutton.Click += new System.EventHandler(this.dibutton_Click);
             // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(558, 13);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.ReadOnly = true;
+            this.usernameTextBox.Size = new System.Drawing.Size(130, 20);
+            this.usernameTextBox.TabIndex = 8;
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Location = new System.Drawing.Point(558, 39);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(130, 20);
+            this.passwordTextBox.TabIndex = 9;
+            // 
+            // usernamelbl
+            // 
+            this.usernamelbl.AutoSize = true;
+            this.usernamelbl.Location = new System.Drawing.Point(497, 17);
+            this.usernamelbl.Name = "usernamelbl";
+            this.usernamelbl.Size = new System.Drawing.Size(55, 13);
+            this.usernamelbl.TabIndex = 10;
+            this.usernamelbl.Text = "Username";
+            // 
+            // passwordlbl
+            // 
+            this.passwordlbl.AutoSize = true;
+            this.passwordlbl.Location = new System.Drawing.Point(499, 42);
+            this.passwordlbl.Name = "passwordlbl";
+            this.passwordlbl.Size = new System.Drawing.Size(53, 13);
+            this.passwordlbl.TabIndex = 11;
+            this.passwordlbl.Text = "Password";
+            // 
+            // automateButton
+            // 
+            this.automateButton.Location = new System.Drawing.Point(558, 65);
+            this.automateButton.Name = "automateButton";
+            this.automateButton.Size = new System.Drawing.Size(130, 23);
+            this.automateButton.TabIndex = 12;
+            this.automateButton.Text = "Automate";
+            this.automateButton.UseVisualStyleBackColor = true;
+            this.automateButton.Click += new System.EventHandler(this.automateButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 366);
+            this.ClientSize = new System.Drawing.Size(734, 516);
+            this.Controls.Add(this.automateButton);
+            this.Controls.Add(this.passwordlbl);
+            this.Controls.Add(this.usernamelbl);
+            this.Controls.Add(this.passwordTextBox);
+            this.Controls.Add(this.usernameTextBox);
             this.Controls.Add(this.dibutton);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.errorBox1);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.scanButton);
@@ -147,8 +189,12 @@
         private System.Windows.Forms.Button scanButton;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.TextBox errorBox1;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button dibutton;
+        private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.TextBox passwordTextBox;
+        private System.Windows.Forms.Label usernamelbl;
+        private System.Windows.Forms.Label passwordlbl;
+        private System.Windows.Forms.Button automateButton;
     }
 }
 
