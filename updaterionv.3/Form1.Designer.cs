@@ -29,6 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.driverCheckBox = new System.Windows.Forms.CheckBox();
             this.softwareCheckBox = new System.Windows.Forms.CheckBox();
@@ -41,6 +42,8 @@
             this.usernamelbl = new System.Windows.Forms.Label();
             this.passwordlbl = new System.Windows.Forms.Label();
             this.automateButton = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.testButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkedListBox1
@@ -50,6 +53,7 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(709, 364);
             this.checkedListBox1.TabIndex = 0;
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             // 
             // driverCheckBox
             // 
@@ -156,11 +160,27 @@
             this.automateButton.UseVisualStyleBackColor = true;
             this.automateButton.Click += new System.EventHandler(this.automateButton_Click);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // testButton
+            // 
+            this.testButton.Location = new System.Drawing.Point(358, 94);
+            this.testButton.Name = "testButton";
+            this.testButton.Size = new System.Drawing.Size(75, 23);
+            this.testButton.TabIndex = 14;
+            this.testButton.Text = "test";
+            this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(734, 516);
+            this.Controls.Add(this.testButton);
             this.Controls.Add(this.automateButton);
             this.Controls.Add(this.passwordlbl);
             this.Controls.Add(this.usernamelbl);
@@ -195,6 +215,8 @@
         private System.Windows.Forms.Label usernamelbl;
         private System.Windows.Forms.Label passwordlbl;
         private System.Windows.Forms.Button automateButton;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Button testButton;
     }
 }
 

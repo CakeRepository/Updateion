@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -346,6 +348,28 @@ namespace updaterionv._3
                     //Failed update
                     Console.WriteLine("Failed : " + updatesToInstall[i].Title);
                 }
+            }
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            string password = passwordTextBox.Text;
+            AutoLoginBuilder al = new AutoLoginBuilder();
+            //al.autoLogin(username,password);
+            changeRegKey();
+        }
+        private void changeRegKey()
+        {
+            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true);
+            if (key != null)
+            {
+                key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+                key.Close();
             }
         }
     }
