@@ -48,7 +48,7 @@ namespace updaterionv._3
             }
             
         }
-        private void MethodToUpdateControl()
+        public void MethodToUpdateControl()
         {
             // since the BackgroundWorker is designed to use
             // the form's UI thread on the RunWorkerCompleted
@@ -61,8 +61,13 @@ namespace updaterionv._3
             // Invoke method:
             // listBox1.Invoke( new Action( () => listBox1.Items.AddRange( MyList.ToArray() ) ) );
         }
-        static ISearchResult dResult;
-        static ISearchResult uResult;
+
+        /// <summary>
+        /// Checks for Updates with Scan button DOES NOT INSTALL
+        /// </summary>
+
+        static ISearchResult diResult;
+        static ISearchResult swResult;
         void scanWorker()
         {
             
@@ -71,8 +76,8 @@ namespace updaterionv._3
             ///Checks if Driver box is checked and updates list for updates in "Drivers"
             if (driverCheckBox.Checked)
             {
-                dResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
-                foreach (IUpdate update in dResult.Updates)
+                diResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
+                foreach (IUpdate update in diResult.Updates)
                 {
                     if (update == null)
                     {
@@ -87,9 +92,9 @@ namespace updaterionv._3
             ///Checks if software box is checked and updates list for updates in "Software"
             if (softwareCheckBox.Checked)
             {
-                uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
-                Console.WriteLine(uResult.Updates.Count);
-                foreach (IUpdate update in uResult.Updates)
+                swResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+                Console.WriteLine(swResult.Updates.Count);
+                foreach (IUpdate update in swResult.Updates)
                 {
                     if (update.ToString() == "")
                     {
@@ -116,9 +121,9 @@ namespace updaterionv._3
             if (softwareCheckBox.Checked)
             {
                 UpdateDownloader downloader = uSession.CreateUpdateDownloader();
-                downloader.Updates = uResult.Updates;
+                downloader.Updates = swResult.Updates;
                 downloader.Download();
-                foreach (IUpdate update in uResult.Updates)
+                foreach (IUpdate update in swResult.Updates)
                 {
                     if (update.IsDownloaded)
                         updatesToInstall.Add(update);
@@ -127,9 +132,9 @@ namespace updaterionv._3
             if (driverCheckBox.Checked)
             {
                 UpdateDownloader downloader = uSession.CreateUpdateDownloader();
-                downloader.Updates = dResult.Updates;
+                downloader.Updates = diResult.Updates;
                 downloader.Download();
-                foreach (IUpdate update in dResult.Updates)
+                foreach (IUpdate update in diResult.Updates)
                 {
                     if (update.IsDownloaded)
                         updatesToInstall.Add(update);
@@ -189,12 +194,14 @@ namespace updaterionv._3
             
         }
 
-        private void automateButton_Click(object sender, EventArgs e)
+        private async void automateButton_Click(object sender, EventArgs e)
         {
             string password = passwordTextBox.Text;
             bool dcheckbox = false;
             bool scheckbox = false;
             bool valid = false;
+            MyList = new List<string>();
+
             errorBox1.Text = "";
             if (driverCheckBox.Checked)
             {
@@ -212,23 +219,134 @@ namespace updaterionv._3
             {
                 errorBox1.Text = "Incorrect Password";
             }
+            else if(!driverCheckBox.Checked && !softwareCheckBox.Checked)
+            {
+                errorBox1.Text = "Please select updates";
+            }
             else
             {
-                disableBox();
+                disableBox(false);
+                try
+                {
+                    // Run your operation asynchronously
+                    
+                    await Task.Factory.StartNew(() => automateWorker(dcheckbox, scheckbox, username, password),
+                                                TaskCreationOptions.LongRunning);
+
+                    MethodToUpdateControl();
+                    for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                    {
+                        checkedListBox1.SetItemChecked(i, true);
+                    }
+                    errorBox1.Text = "completed";
+                    
+                }
+                finally
+                {
+                    disableBox(true); // Re-enable everything after the above completes
+                }
+                
+                
             }
         }
         /// <summary>
         /// Disables all boxes on Form1 if items are added they will need to be added here to disable
         /// </summary>
-        public void disableBox()
+        public void disableBox(bool state)
         {
-            this.automateButton.Enabled = false;
-            this.scanButton.Enabled = false;
-            this.dibutton.Enabled = false;
-            this.driverCheckBox.Enabled = false;
-            this.softwareCheckBox.Enabled = false;
-            this.clearButton.Enabled = false;
-            this.passwordTextBox.Enabled = false;
+            this.automateButton.Enabled = state;
+            this.scanButton.Enabled = state;
+            this.dibutton.Enabled = state;
+            this.driverCheckBox.Enabled = state;
+            this.softwareCheckBox.Enabled = state;
+            this.clearButton.Enabled = state;
+            this.passwordTextBox.Enabled = state;
+        }
+        /// <summary>
+        /// Automates software installs with 
+        /// </summary>
+        /// <param name="driverCheckBox">true = checks for driver updates, false = doest not</param>
+        /// <param name="softwareCheckBox">true = checks for software updates, false = doest not</param>
+        /// <param name="username">Currently logged in username</param>
+        /// <param name="password"></param>
+        public void automateWorker(bool driverCheckBox, bool softwareCheckBox, string username, string password)
+        {
+            Form1 frm1 = new Form1();
+            ISearchResult dResult = null;
+            ISearchResult uResult = null;
+            UpdateSession uSession = new UpdateSession();
+            IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
+            UpdateCollection updatesToInstall = new UpdateCollection();
+
+            ///Checks if Driver box is checked and updates list for updates in "Drivers"
+            if (driverCheckBox == true)
+            {
+                dResult = uSearcher.Search("IsInstalled=0 and Type='Driver'");
+                foreach (IUpdate update in dResult.Updates)
+                {
+
+                    MyList.Add(update.Title);
+                    Console.WriteLine(update.Title);
+                }
+            }
+            ///Checks if software box is checked and updates list for updates in "Software"
+            if (softwareCheckBox == true)
+            {
+                uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+                Console.WriteLine(uResult.Updates.Count);
+                foreach (IUpdate update in uResult.Updates)
+                {
+
+                    Console.WriteLine(update.Title);
+                }
+            }
+
+            //checks if software box is checked and installed those updates
+            if (softwareCheckBox == true)
+            {
+                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+                downloader.Updates = uResult.Updates;
+                try
+                {
+                    downloader.Download();
+                }
+                catch { }
+
+                foreach (IUpdate update in uResult.Updates)
+                {
+                    if (update.IsDownloaded)
+                        updatesToInstall.Add(update);
+                }
+            }
+            if (driverCheckBox == true)
+            {
+                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+                downloader.Updates = dResult.Updates;
+                downloader.Download();
+                foreach (IUpdate update in dResult.Updates)
+                {
+                    if (update.IsDownloaded)
+                        updatesToInstall.Add(update);
+                }
+
+            }
+
+
+            IUpdateInstaller installer = uSession.CreateUpdateInstaller();
+            installer.Updates = updatesToInstall;
+            IInstallationResult installationRes = installer.Install();
+            for (int i = 0; i < updatesToInstall.Count; i++)
+            {
+                if (installationRes.GetUpdateResult(i).HResult == 0)
+                {
+                    Console.WriteLine("Installed : " + updatesToInstall[i].Title);
+                }
+                else
+                {
+                    //Failed update
+                    Console.WriteLine("Failed : " + updatesToInstall[i].Title);
+                }
+            }
         }
     }
 }
