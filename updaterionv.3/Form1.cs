@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Drawing;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WUApiLib;
+
 
 namespace updaterionv._3
 {
@@ -332,45 +334,56 @@ namespace updaterionv._3
                 }
 
             }
-
-
             IUpdateInstaller installer = uSession.CreateUpdateInstaller();
-            installer.Updates = updatesToInstall;
-            IInstallationResult installationRes = installer.Install();
-            for (int i = 0; i < updatesToInstall.Count; i++)
+            Console.WriteLine(updatesToInstall.ToString());
+
+            //Checks if 0 updates will error on install if 0 updates
+            if(updatesToInstall.Count == 0)
             {
-                if (installationRes.GetUpdateResult(i).HResult == 0)
+                MyList.Add("No updates found");
+            }
+            //if there is updates
+            else
+            {
+                installer.Updates = updatesToInstall;
+                IInstallationResult installationRes = installer.Install();
+                for (int i = 0; i < updatesToInstall.Count; i++)
                 {
-                    Console.WriteLine("Installed : " + updatesToInstall[i].Title);
+                    if (installationRes.GetUpdateResult(i).HResult == 0)
+                    {
+                        Console.WriteLine("Installed : " + updatesToInstall[i].Title);
+                        if (installationRes.RebootRequired == true)
+                        {
+                            AutoLoginBuilder al = new AutoLoginBuilder();
+                            al.autoLogin(username, password);
+                            changeRegKey();
+                        }
+                    }
+                    else
+                    {
+                        //Failed update
+                        Console.WriteLine("Failed : " + updatesToInstall[i].Title);
+                    }
                 }
-                else
+                if (installationRes.RebootRequired == true)
                 {
-                    //Failed update
-                    Console.WriteLine("Failed : " + updatesToInstall[i].Title);
+                    AutoLoginBuilder al = new AutoLoginBuilder();
+                    al.autoLogin(username, password);
+                    changeRegKey();
                 }
             }
+            
+            
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
-
-        private void testButton_Click(object sender, EventArgs e)
-        {
-            string password = passwordTextBox.Text;
-            AutoLoginBuilder al = new AutoLoginBuilder();
-            //al.autoLogin(username,password);
-            changeRegKey();
-        }
+        
         private void changeRegKey()
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true);
-            if (key != null)
-            {
-                key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
-                key.Close();
-            }
+            Process proc = Process.Start(@"C:\temp\endauto.bat");
         }
     }
 }

@@ -14,18 +14,26 @@ namespace updaterionv._3
         public void autoLogin(string username, string password)
         {
             string path = @"c:\temp\autologin.bat";
-            string pathEnd = @"c:\temp\endauto.ps1";
+            string pathEnd = @"c:\temp\endauto.bat";
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
             if (!File.Exists(path))
             {
                 char c = '"';
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v AutoAdminLogon /t REG_SZ /d 0 /f");
-                    sw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v DefaultUserName /t REG_SZ /d "+username+" /f");
-                    sw.WriteLine("reg add "+c+"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"+c+" /v DefaultPassword /t REG_SZ /d "+password+" /f");
-                    sw.WriteLine("Timeout 10");
+                    sw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v AutoAdminLogon /t REG_SZ /d 1 /reg:64 /f");
+                    sw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v DefaultUserName /t REG_SZ /d "+username+ " /reg:64 /f");
+                    sw.WriteLine("reg add "+c+"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon"+c+" /v DefaultPassword /t REG_SZ /d "+password+ " /reg:64 /f");
+                    //sw.WriteLine("Timeout 10"); debug
                 }
+            }
+            if (File.Exists(pathEnd))
+            {
+                File.Delete(pathEnd);
             }
             if (!File.Exists(pathEnd))
             {
@@ -33,11 +41,10 @@ namespace updaterionv._3
                 // Create a file to write to.
                 using (StreamWriter dw = File.CreateText(pathEnd))
                 {
-                    dw.WriteLine("$RegPath = " + c + "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + "  ");
-                    dw.WriteLine("Set-ItemProperty $RegPath " + c + "AutoAdminLogon" + c + " -Value " + c + "0" + c + " -type String  ");
-                    dw.WriteLine("Set-ItemProperty $RegPath " + c + "DefaultUsername" + c + " -Value " + c + " " + c + " -type String  ");
-                    dw.WriteLine("Set-ItemProperty $RegPath " + c + "DefaultPassword" + c + " -Value " + c + " " + c + " -type String");
-                }
+                    dw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v AutoAdminLogon /t REG_SZ /d 0 /reg:64 /f");
+                    dw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v DefaultUserName /t REG_SZ /d " + "null" + " /reg:64 /f");
+                    dw.WriteLine("reg add " + c + "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon" + c + " /v DefaultPassword /t REG_SZ /d " + "null" + " /reg:64 /f");
+                } 
             }
             
         }
